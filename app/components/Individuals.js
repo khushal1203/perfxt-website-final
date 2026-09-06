@@ -1,0 +1,172 @@
+"use client";
+import { useRef, useState, useEffect } from "react";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+const Slider = dynamic(() => import("react-slick"), { ssr: false });
+
+const slides = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+
+const slickSettings = {
+  infinite: true,
+  centerMode: true,
+  centerPadding: "100px",
+  slidesToShow: 3,
+  speed: 800,
+  autoplay: true,
+  autoplaySpeed: 2500,
+  arrows: false,
+  dots: false,
+  pauseOnHover: false,
+  cssEase: "ease-in-out",
+  responsive: [
+    { breakpoint: 1280, settings: { slidesToShow: 3, centerPadding: "60px" } },
+    { breakpoint: 1024, settings: { slidesToShow: 3, centerPadding: "20px" } },
+  ],
+};
+
+export default function Individuals() {
+  const scrollRef = useRef(null);
+  const [active, setActive] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const activeRef = useRef(0);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const posRef = useRef(0);
+  const animRef = useRef(null);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const dragStartPos = useRef(0);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const slideEls = el.querySelectorAll(".ind-mobile-slide");
+    if (!slideEls.length) return;
+    const SLIDE_W = slideEls[0].offsetWidth + 16; // 16 = gap
+    const TOTAL = SLIDE_W * slides.length;
+    const SPEED = 0.4;
+
+    const updateActive = () => {
+      const idx = Math.round(posRef.current / SLIDE_W) % slides.length;
+      activeRef.current = idx;
+      setActive(idx);
+    };
+
+    const animate = () => {
+      if (!isDragging.current) {
+        posRef.current += SPEED;
+        if (posRef.current >= TOTAL) posRef.current -= TOTAL;
+        el.scrollLeft = posRef.current;
+        updateActive();
+      }
+      animRef.current = requestAnimationFrame(animate);
+    };
+
+    const onTouchStart = (e) => {
+      isDragging.current = true;
+      dragStartX.current = e.touches[0].clientX;
+      dragStartPos.current = posRef.current;
+    };
+
+    const onTouchMove = (e) => {
+      if (!isDragging.current) return;
+      const delta = dragStartX.current - e.touches[0].clientX;
+      let next = (dragStartPos.current + delta) % TOTAL;
+      if (next < 0) next += TOTAL;
+      posRef.current = next;
+      el.scrollLeft = posRef.current;
+      updateActive();
+    };
+
+    const onTouchEnd = () => {
+      posRef.current = el.scrollLeft;
+      isDragging.current = false;
+    };
+
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: true });
+    el.addEventListener("touchend", onTouchEnd);
+
+    animRef.current = requestAnimationFrame(animate);
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [isMobile]);
+
+  const handleScroll = () => {};
+
+  return (
+    <section className="ind-wrapper" id="integrate">
+      <div className="ind-top-box">
+        <div className="ind-heading-group">
+          <p className="ind-label">You Want to Achieve More</p>
+          <h2 className="ind-heading">
+            <span className="ind-heading--black">We Built for</span>
+            <br />
+            Busy Individuals
+          </h2>
+        </div>
+        <p className="ind-subtext">
+          Whether you&apos;re raising kids, building a career, juggling high-stakes work, or just living a busy life - Perfxt helps you stop guessing and start adjusting, so you can achieve more with less stress and fatigue.
+        </p>
+      </div>
+
+      {isMobile ? (
+        <>
+          <div className="ind-mobile-scroll" ref={scrollRef} onScroll={handleScroll}>
+            {[...slides, ...slides].map((num, i) => (
+              <div key={i} className="ind-mobile-slide">
+                <Image
+                  src={`/images/mobile/mobile${num}.png`}
+                  alt={`Mobile screen ${num}`}
+                  width={739}
+                  height={1567}
+                  sizes="65vw"
+                  style={{ width: "100%", height: "auto", display: "block", borderRadius: "24px" }}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="ind-mobile-dots">
+            {slides.map((_, i) => (
+              <span key={i} className={`ind-dot${i === active ? " ind-dot--active" : ""}`} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="ind-slider-wrapper">
+          <Slider {...slickSettings}>
+            {slides.map((num) => (
+              <div key={num} className="ind-slide-item">
+                <div className="ind-phone-frame">
+                  <Image
+                    src={`/images/mobile/mobile${num}.png`}
+                    alt={`Mobile screen ${num}`}
+                    width={739}
+                    height={1567}
+                    sizes="(max-width: 1024px) 30vw, 25vw"
+                    style={{ width: "100%", height: "auto", display: "block" }}
+                  />
+                </div>
+              </div>
+            ))}
+          </Slider>
+        </div>
+      )}
+    </section>
+  );
+}

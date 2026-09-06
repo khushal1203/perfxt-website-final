@@ -1,0 +1,202 @@
+"use client";
+import { useState, useEffect, useRef } from "react";
+
+const reviews = [
+  {
+    quote: "Now I know that if I train in the morning I do 50% less tasks during the day. Perfxt made me realise I should train in the evening.",
+    avatar: "/images/home/rev1.png",
+    name: "Samantha L.",
+    role: "Startup Founder",
+    stars: 3,
+  },
+  {
+    quote: "Perfxt completely changed how I structure my week. I used to guess — now I know exactly when I perform best.",
+    avatar: "/images/home/rev2.png",
+    name: "James K.",
+    role: "Creator",
+    stars: 3,
+  },
+  {
+    quote: "As a consultant juggling multiple clients, Perfxt helps me protect my deep work hours and stay consistent.",
+    avatar: "/images/home/rev3.png",
+    name: "Priya M.",
+    role: "Consultant",
+    stars: 3,
+  },
+  {
+    quote: "I never realized how much my sleep was affecting my output. Perfxt connected the dots for me.",
+    avatar: "/images/home/rev4.png",
+    name: "Alex R.",
+    role: "Athlete",
+    stars: 3,
+  },
+  {
+    quote: "Finally a tool that tells me when to work, not just what to do. Game changer for my productivity.",
+    avatar: "/images/home/rev5.png",
+    name: "Nina T.",
+    role: "Designer",
+    stars: 3,
+  },
+];
+
+const desktopImages = [
+  { src: "/images/home/rev1.png", top: 140, left: 0 },
+  { src: "/images/home/rev2.png", top: 60,  left: 240 },
+  { src: "/images/home/rev3.png", top: 0,   left: 480 },
+  { src: "/images/home/rev4.png", top: 0,   left: 720 },
+  { src: "/images/home/rev5.png", top: 60,  left: 960 },
+  { src: "/images/home/rev6.png", top: 140, left: 1200 },
+];
+
+const mobileImages = [
+  { src: "/images/home/rev1.png", top: 100, leftPct: "0%" },
+  { src: "/images/home/rev2.png", top: 40,  leftPct: "17%" },
+  { src: "/images/home/rev3.png", top: 0,   leftPct: "34%" },
+  { src: "/images/home/rev4.png", top: 0,   leftPct: "51%" },
+  { src: "/images/home/rev5.png", top: 40,  leftPct: "68%" },
+  { src: "/images/home/rev6.png", top: 100, leftPct: "85%" },
+];
+
+export default function Reviews() {
+  const [start, setStart] = useState(0);
+  const [isTablet, setIsTablet] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const rowRef = useRef(null);
+  const total = reviews.length;
+
+  useEffect(() => {
+    const check = () => {
+      setIsTablet(window.innerWidth <= 768 && window.innerWidth > 425);
+      setIsMobile(window.innerWidth <= 425);
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile || !rowRef.current) return;
+    const row = rowRef.current;
+    const card = row.children[start];
+    if (!card) return;
+    const isWrap = (prevRef.current === total - 1 && start === 0) || (prevRef.current === 0 && start === total - 1);
+    const behavior = isWrap ? "instant" : "smooth";
+    const scrollLeft = card.offsetLeft - (row.offsetWidth - card.offsetWidth) / 2;
+    row.scrollTo({ left: scrollLeft, behavior });
+  }, [start, isTablet, isMobile]);
+
+  const prevRef = useRef(0);
+
+  const prev = () => {
+    prevRef.current = start;
+    setStart((p) => (p - 1 + total) % total);
+  };
+  const next = () => {
+    prevRef.current = start;
+    setStart((p) => (p + 1) % total);
+  };
+
+  const visible = [reviews[start % total], reviews[(start + 1) % total], reviews[(start + 2) % total]];
+
+  const tabletVisible = [
+    reviews[(start - 1 + total) % total],
+    reviews[start % total],
+    reviews[(start + 1) % total],
+  ];
+
+  return (
+    <section className="reviews-section">
+      <div className="reviews-images-wrapper">
+        {(isMobile ? mobileImages : desktopImages).map((img, i) => (
+          <div
+            key={i}
+            className={`reviews-img-item reviews-img-${i + 1}`}
+            style={isMobile
+              ? { top: img.top, left: img.leftPct }
+              : { top: img.top, left: `${(img.left / 1420) * 100}%` }
+            }
+          >
+            <img src={img.src} alt={`review ${i + 1}`} width={220} height={220} />
+          </div>
+        ))}
+      </div>
+
+      <div className="reviews-text-box">
+        <div className="reviews-text-top">
+          <p className="reviews-label">What users are saying</p>
+          <h2 className="reviews-heading">Trusted by thousands</h2>
+        </div>
+        <p className="reviews-subtext">
+          Hear from people who&apos;ve transformed their weeks with Perfxt —
+          founders, creators, consultants and athletes.
+        </p>
+      </div>
+
+      {isTablet && (
+        <div className="reviews-nav-mobile">
+          <button className="reviews-nav-btn" onClick={prev} aria-label="Previous">
+            <img src="/images/home/rev8.svg" alt="prev" width={32} height={32} />
+          </button>
+          <button className="reviews-nav-btn" onClick={next} aria-label="Next">
+            <img src="/images/home/rev9.svg" alt="next" width={32} height={32} />
+          </button>
+        </div>
+      )}
+
+      <div ref={rowRef} className="reviews-cards-row">
+        {(isMobile ? reviews : isTablet ? tabletVisible : visible).map((r, i) => (
+          <div
+            key={i}
+            className={`reviews-card-wrapper${
+              isTablet
+                ? i === 1 ? " reviews-card-wrapper--mid" : " reviews-card-wrapper--side"
+                : !isTablet && i === 1 ? " reviews-card-wrapper--mid" : ""
+            }`}
+          >
+            {!isTablet && !isMobile && i === 1 && (
+              <div className="reviews-card-icons">
+                <button className="reviews-nav-btn" onClick={prev} aria-label="Previous">
+                  <img src="/images/home/rev8.svg" alt="prev" width={32} height={32} />
+                </button>
+                <button className="reviews-nav-btn" onClick={next} aria-label="Next">
+                  <img src="/images/home/rev9.svg" alt="next" width={32} height={32} />
+                </button>
+              </div>
+            )}
+            <div className="reviews-card">
+              <div className="reviews-card-top">
+                <img src="/images/home/rev7.svg" alt="quote" width={28} height={28} className="reviews-card-icon" />
+                <p className="reviews-card-quote">&ldquo;{r.quote}&rdquo;</p>
+              </div>
+              <div className="reviews-card-bottom">
+                <div className="reviews-card-user">
+                  <img src={r.avatar} alt={r.name} width={50} height={50} className="reviews-card-avatar" />
+                  <div className="reviews-card-info">
+                    <span className="reviews-card-name">{r.name}</span>
+                    <span className="reviews-card-role">{r.role}</span>
+                  </div>
+                </div>
+                <div className="reviews-card-stars">
+                  {[...Array(r.stars)].map((_, j) => (
+                    <span key={j} className="reviews-star">★</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {isMobile && (
+        <div className="reviews-nav-mobile">
+          <button className="reviews-nav-btn" onClick={prev} aria-label="Previous">
+            <img src="/images/home/rev8.svg" alt="prev" width={32} height={32} />
+          </button>
+          <button className="reviews-nav-btn" onClick={next} aria-label="Next">
+            <img src="/images/home/rev9.svg" alt="next" width={32} height={32} />
+          </button>
+        </div>
+      )}
+    </section>
+  );
+}
