@@ -5,11 +5,35 @@ import { Outfit, Inter } from "next/font/google";
 const outfit = Outfit({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap", variable: "--font-outfit" });
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500"], display: "swap", variable: "--font-inter" });
 
+// Live domain — set NEXT_PUBLIC_SITE_URL in hosting env, or edit the fallback below
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://perfxt.com";
+
+const SITE_TITLE = "Perfxt - Your productivity app!";
+const SITE_DESCRIPTION = "Turn your body data into your ideal day!";
+
 export const metadata = {
-  title: "Perfxt",
-  description: "What We Do!",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_TITLE,
+    template: "%s | Perfxt",
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: "Perfxt",
+  openGraph: {
+    type: "website",
+    siteName: "Perfxt",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
   icons: {
     icon: "/favicon.png",
+    apple: "/favicon.png",
   },
 };
 
@@ -27,9 +51,6 @@ export default function RootLayout({ children }) {
         {children}
         <Script id="fb-pixel" strategy="afterInteractive">
           {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1914651325815360');fbq('track','PageView');`}
-        </Script>
-        <Script id="reddit-pixel" strategy="afterInteractive">
-          {`!function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js?pixel_id=a2_jpf3f687lccm",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt('init','a2_jpf3f687lccm');rdt('track','PageVisit');`}
         </Script>
         <noscript>
           <img height="1" width="1" style={{display:"none"}} src="https://www.facebook.com/tr?id=1914651325815360&ev=PageView&noscript=1" alt="" />

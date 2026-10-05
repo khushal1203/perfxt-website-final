@@ -2,6 +2,11 @@ import Image from "next/image";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
+export const metadata = {
+  title: "Terms & Conditions",
+  description: "The terms that apply when you use the Perfxt website and app.",
+};
+
 export default function TermsAndCondition() {
   return (
     <div className="term-page">
@@ -34,8 +39,6 @@ export default function TermsAndCondition() {
           {/* First box — intro text */}
           <div className="term-section-box term-section-box--plain">
             <p className="term-body-text">
-
-              
               Thank you for shopping at Perfxt.com, owned and operated by WeClose Limited. (&ldquo;Perfxt&rdquo;). These Terms of Use (the &ldquo;Terms&rdquo;) apply to our websites (including Perfxt.com), mobile applications (each, an &ldquo;App&rdquo;), software and technology and related services (collectively, the &quot;Services&quot;). The Services are provided by Perfxt (&quot;Perfxt&quot; or &quot;we,&quot; &quot;us,&quot; &quot;our&quot; and similar references). By accessing or using the Services, or clicking a button or checking a box marked &ldquo;I Agree,&rdquo; &ldquo;Create Account&rdquo; or something similar, you signify that you have read, understood, and agree to be bound by these Terms, to the collection and use of your information as set forth in the Perfxt Privacy Policy, which is hereby incorporated by reference. These Terms apply to all visitors, users, and others who register for or otherwise access the Services (&ldquo;Users&rdquo;). If you do not agree with these Terms of Use and our Privacy Policy, you should not use the Services.
             </p>
             <p className="term-body-text">
