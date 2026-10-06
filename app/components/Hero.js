@@ -41,14 +41,14 @@ export default function Hero() {
           <span className="desktop-heading">
             Turn Your Body Data Into
             <br />
-            Better Decisions
+           Your Ideal Day!
           </span>
           <span className="mobile-heading">
             Turn Your Body
             <br />
-            Data Into Better
+            Data Into Your
             <br />
-            Decisions
+             Ideal Day!
           </span>
         </h1>
       </div>

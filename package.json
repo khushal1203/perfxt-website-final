@@ -19,5 +19,9 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "tailwindcss": "^4"
+  },
+  "overrides": {
+    "source-map-js": ">=1.2.2",
+    "baseline-browser-mapping": ">=2.11.0"
   }
 }
