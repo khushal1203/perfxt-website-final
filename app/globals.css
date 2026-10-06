@@ -17,7 +17,7 @@ section[id] {
 html, body {
   height: 100%;
   overflow-x: hidden;
-  font-family: var(--font-outfit), sans-serif;
+  font-family: "Outfit", sans-serif;
   background: #ffffff;
 }
 

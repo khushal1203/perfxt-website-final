@@ -1,9 +1,5 @@
 import "./globals.css";
 import Script from "next/script";
-import { Outfit, Inter } from "next/font/google";
-
-const outfit = Outfit({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap", variable: "--font-outfit" });
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500"], display: "swap", variable: "--font-inter" });
 
 // Live domain — set NEXT_PUBLIC_SITE_URL in hosting env, or edit the fallback below
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://perfxt.com";
@@ -40,10 +36,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${outfit.variable} ${inter.variable}`}>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
         {/* Preload LCP hero image */}
         <link rel="preload" as="image" href="/images/home/hero1.webp" />
       </head>
