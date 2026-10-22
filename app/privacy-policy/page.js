@@ -369,6 +369,15 @@ export default function PrivacyPolicy() {
               </p>
             </div>
           </div>
+
+          <div className="term-section-box">
+            <h2 className="term-section-title"><span className="term-section-num">9.</span> Apple&#39;s Family Controls and Device Activity frameworks</h2>
+            <div className="term-section-body">
+              <p className="term-body-text">
+                Perfxt uses Apple&#39;s Family Controls and Device Activity frameworks, with individual authorization, to monitor device-usage thresholds. The app uses this information to help users understand how device usage relates to productivity, energy, and wind-down habits. The Device Activity Monitor extension records threshold events in a shared App Group, and the main app securely synchronizes those events to the user&#39;s account. Perfxt does not provide parental surveillance and does not expose another person&#39;s device-usage data.
+              </p>
+            </div>
+          </div>
         </div>
       </main>
 
